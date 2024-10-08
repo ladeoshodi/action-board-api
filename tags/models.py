@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class Tag(models.Model):
@@ -8,3 +9,11 @@ class Tag(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            original = Tag.objects.get(pk=self.pk)
+            if original.user != self.user:
+                raise ValidationError({"user": "user field is immutable"})
+
+        super(Tag, self).save(*args, **kwargs)
