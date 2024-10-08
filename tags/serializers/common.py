@@ -1,7 +1,5 @@
 from rest_framework import serializers
-from .models import Tag
-from users.serializers import UserSerializer
-from django.core.exceptions import ObjectDoesNotExist
+from ..models import Tag
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -21,7 +19,3 @@ class TagSerializer(serializers.ModelSerializer):
                 {"name": "Tag name should be unique"})
 
         return data
-
-
-class PopulatedTagSerializer(TagSerializer):
-    user = UserSerializer()

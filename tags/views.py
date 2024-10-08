@@ -6,7 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import ValidationError
 
 from .models import Tag
-from .serializers import TagSerializer, PopulatedTagSerializer
+from .serializers.common import TagSerializer
+from .serializers.populated import PopulatedTagSerializer
 
 
 class TagView (APIView):
