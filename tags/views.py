@@ -17,8 +17,8 @@ class TagView (APIView):
 class TagListView(TagView):
 
     def get(self, request):
-        Tags = Tag.objects.all().filter(user=request.user.id)
-        serialized_tags = PopulatedTagSerializer(Tags, many=True)
+        tags = Tag.objects.all().filter(user=request.user.id)
+        serialized_tags = PopulatedTagSerializer(tags, many=True)
         return Response(serialized_tags.data)
 
     def post(self, request):
@@ -43,12 +43,9 @@ class TagDetailView(TagView):
             raise NotFound(detail="Tag not found")
 
     def get(self, request, pk):
-        try:
-            tag = self.get_tag(user=request.user.id, pk=pk)
-            serialized_tag = PopulatedTagSerializer(tag)
-            return Response(serialized_tag.data)
-        except Tag.DoesNotExist:
-            raise NotFound(detail="Tag not found")
+        tag = self.get_tag(user=request.user.id, pk=pk)
+        serialized_tag = PopulatedTagSerializer(tag)
+        return Response(serialized_tag.data)
 
     def delete(self, request, pk):
         tag_to_delete = self.get_tag(user=request.user.id, pk=pk)

@@ -16,6 +16,6 @@ class TagSerializer(serializers.ModelSerializer):
 
         if existing_tag:
             raise serializers.ValidationError(
-                {"name": "Tag name should be unique"})
+                {"name": "Tag name already exists"})
 
         return data
