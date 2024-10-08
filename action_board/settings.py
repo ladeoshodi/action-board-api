@@ -55,7 +55,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -143,6 +142,6 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'jwt_auth.authentication.JWTAuthentication'
+        'users.authentication.JWTAuthentication'
     ],
 }
