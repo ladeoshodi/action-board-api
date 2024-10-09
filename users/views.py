@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from .serializers.common import UserSerializer
 from .serializers.populated import PopulatedUserSerializer
 from .serializers.auth import AuthUserSerializer
@@ -62,7 +63,21 @@ class UserDetailView(APIView):
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     def put(self, request):
-        user_to_update = request.user
+        if "password" in (request.data.keys()):
+            updated_user = AuthUserSerializer(
+                request.user, data=request.data, partial=True)
+        else:
+            updated_user = UserSerializer(
+                request.user, data=request.data, partial=True)
+
+        try:
+            updated_user.is_valid(raise_exception=True)
+            updated_user.save()
+            return Response(updated_user.data, status=status.HTTP_202_ACCEPTED)
+        except ValidationError:
+            return Response(updated_user.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     def delete(self, request):
         pass
