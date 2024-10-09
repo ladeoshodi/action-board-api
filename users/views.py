@@ -80,4 +80,7 @@ class UserDetailView(APIView):
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     def delete(self, request):
-        pass
+        user = request.user
+        user.is_active = False
+        user.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
