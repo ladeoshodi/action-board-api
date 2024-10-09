@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from .serializers.common import UserSerializer
 from .serializers.populated import PopulatedUserSerializer
+from .serializers.auth import AuthUserSerializer
 
 User = get_user_model()
 
@@ -17,7 +18,7 @@ User = get_user_model()
 class RegisterView(APIView):
 
     def post(self, request):
-        user_to_create = UserSerializer(data=request.data)
+        user_to_create = AuthUserSerializer(data=request.data)
 
         if user_to_create.is_valid():
             user_to_create.save()
@@ -61,7 +62,7 @@ class UserDetailView(APIView):
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     def put(self, request):
-        pass
+        user_to_update = request.user
 
     def delete(self, request):
         pass
