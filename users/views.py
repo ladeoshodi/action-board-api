@@ -4,10 +4,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.conf import settings
 from .serializers.common import UserSerializer
+from .serializers.populated import PopulatedUserSerializer
 
 User = get_user_model()
 
@@ -46,3 +48,20 @@ class LoginView(APIView):
             dt.timestamp())}, settings.SECRET_KEY, algorithm="HS256")
 
         return Response({"token": token, "message": f"Welcome back {user_to_login.username}"})
+
+
+class UserDetailView(APIView):
+    permission_classes = IsAuthenticated,
+
+    def get(self, request):
+        try:
+            serialized_user = PopulatedUserSerializer(request.user)
+            return Response(serialized_user.data)
+        except Exception as e:
+            return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def put(self, request):
+        pass
+
+    def delete(self, request):
+        pass
