@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class Task(models.Model):
@@ -17,3 +18,11 @@ class Task(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.user} | List: {self.task_list}"
+
+    def save(self, *args, **kwargs):
+        if self.pk is not None:
+            original = Task.objects.get(pk=self.pk)
+            if original.user != self.user:
+                raise ValidationError({"user": "user field is immutable"})
+
+        super(Task, self).save(*args, **kwargs)
