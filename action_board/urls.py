@@ -22,4 +22,5 @@ urlpatterns = [
     path('user/', include("users.urls")),
     path('tags/', include("tags.urls")),
     path('tasklists/', include("tasklists.urls")),
+    path('tasks/', include("tasks.urls")),
 ]
