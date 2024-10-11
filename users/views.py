@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from datetime import datetime, timedelta
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 from .serializers.common import UserSerializer
 from .serializers.populated import PopulatedUserSerializer
 from .serializers.auth import AuthUserSerializer
