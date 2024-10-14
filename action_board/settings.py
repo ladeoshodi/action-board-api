@@ -33,6 +33,8 @@ DEBUG = env('ENVIRONMENT') == 'DEV'
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['https://action-board-api-4769d6be906d.herokuapp.com/']
+
 
 # Application definition
 
