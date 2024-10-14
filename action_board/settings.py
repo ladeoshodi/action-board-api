@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import environ
+import dj_database_url
+import django_on_heroku
 from pathlib import Path
 
 env = environ.Env()
@@ -27,9 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('ENVIRONMENT') == 'DEV'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -86,14 +88,17 @@ WSGI_APPLICATION = 'action_board.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+DATABASES = {}
+if env('ENVIRONMENT') != 'DEV':
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600, ssl_require=True)
+else:
+    DATABASES['default'] = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': env('DATABASE_NAME'),
         'HOST': 'localhost',
         'PORT': 5432
     }
-}
 
 
 # Password validation
@@ -148,3 +153,5 @@ REST_FRAMEWORK = {
         'users.authentication.JWTAuthentication'
     ],
 }
+
+django_on_heroku.settings(locals())
