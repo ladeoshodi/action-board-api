@@ -162,17 +162,7 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Action Board API',
     'DESCRIPTION': 'Task Management Board',
     'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-    'APPEND_COMPONENTS': {
-        'securitySchemes': {
-            'Authorization': {
-                'type': 'http',
-                'scheme': 'bearer',
-                'bearerFormat': 'JWT',
-            },
-        }
-    },
-    'SECURITY': [{'Authorization': [], }],
+    'SERVE_INCLUDE_SCHEMA': False
 
 }
 
