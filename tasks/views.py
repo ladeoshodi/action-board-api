@@ -9,6 +9,8 @@ from .models import Task
 from .serializers.common import TaskSerializer
 from .serializers.populated import PopulatedTaskSerializer
 
+from drf_spectacular.utils import extend_schema
+
 
 class TaskView (APIView):
     permission_classes = IsAuthenticated,
@@ -16,12 +18,21 @@ class TaskView (APIView):
 
 class TaskListView(TaskView):
 
+    @extend_schema(
+        tags=["Task"],
+        responses=PopulatedTaskSerializer,
+    )
     def get(self, request):
         tasks = Task.objects.all().filter(user=request.user.id)
         serialized_tasks = PopulatedTaskSerializer(
             tasks, many=True)
         return Response(serialized_tasks.data)
 
+    @extend_schema(
+        tags=["Task"],
+        request=TaskSerializer,
+        responses={201: TaskSerializer}
+    )
     def post(self, request):
         request.data["user"] = request.user.id
         task_list_to_add = TaskSerializer(data=request.data)
@@ -43,11 +54,20 @@ class TaskDetailView(TaskView):
         except Task.DoesNotExist:
             raise NotFound(detail="Task not found")
 
+    @extend_schema(
+        tags=["Task"],
+        responses=PopulatedTaskSerializer
+    )
     def get(self, request, pk):
         task_list = self.get_task(user=request.user.id, pk=pk)
         serialized_task_list = PopulatedTaskSerializer(task_list)
         return Response(serialized_task_list.data)
 
+    @extend_schema(
+        tags=["Task"],
+        request=TaskSerializer,
+        responses=TaskSerializer
+    )
     def put(self, request, pk):
         request.data["user"] = request.user.id
         task_to_update = self.get_task(user=request.user.id, pk=pk)
@@ -62,6 +82,9 @@ class TaskDetailView(TaskView):
         except Exception as e:
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+    @extend_schema(
+        tags=["Task"]
+    )
     def delete(self, request, pk):
         task_to_delete = self.get_task(user=request.user.id, pk=pk)
         task_to_delete.delete()
