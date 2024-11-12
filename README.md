@@ -17,7 +17,7 @@ _You can find the [frontend deployment here](https://github.com/ladeoshodi/actio
 ## Live Docs
 
 - [Swagger UI here](https://action-board-api-4769d6be906d.herokuapp.com/api-docs/swagger-ui/)
-- [Redoc here](https://action-board-api-4769d6be906d.herokuapp.co/api-docs/redoc/)
+- [Redoc here](https://action-board-api-4769d6be906d.herokuapp.com/api-docs/redoc/)
 
 ## Database design
 
