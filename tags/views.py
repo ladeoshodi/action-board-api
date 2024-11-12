@@ -9,6 +9,8 @@ from .models import Tag
 from .serializers.common import TagSerializer
 from .serializers.populated import PopulatedTagSerializer
 
+from drf_spectacular.utils import extend_schema
+
 
 class TagView (APIView):
     permission_classes = IsAuthenticated,
@@ -16,11 +18,20 @@ class TagView (APIView):
 
 class TagListView(TagView):
 
+    @extend_schema(
+        tags=["Tag"],
+        responses=PopulatedTagSerializer,
+    )
     def get(self, request):
         tags = Tag.objects.all().filter(user=request.user.id)
         serialized_tags = PopulatedTagSerializer(tags, many=True)
         return Response(serialized_tags.data)
 
+    @extend_schema(
+        tags=["Tag"],
+        request=TagSerializer,
+        responses={201: TagSerializer}
+    )
     def post(self, request):
         request.data["user"] = request.user.id
         tag_to_add = TagSerializer(data=request.data)
@@ -42,11 +53,18 @@ class TagDetailView(TagView):
         except Tag.DoesNotExist:
             raise NotFound(detail="Tag not found")
 
+    @extend_schema(
+        tags=["Tag"],
+        responses=PopulatedTagSerializer
+    )
     def get(self, request, pk):
         tag = self.get_tag(user=request.user.id, pk=pk)
         serialized_tag = PopulatedTagSerializer(tag)
         return Response(serialized_tag.data)
 
+    @extend_schema(
+        tags=["Tag"]
+    )
     def delete(self, request, pk):
         tag_to_delete = self.get_tag(user=request.user.id, pk=pk)
         tag_to_delete.delete()

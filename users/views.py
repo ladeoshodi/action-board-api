@@ -21,6 +21,7 @@ User = get_user_model()
 
 class RegisterView(APIView):
     @extend_schema(
+        tags=["User"],
         request=AuthUserSerializer,
         responses={
             201: OpenApiResponse(
@@ -42,6 +43,7 @@ class RegisterView(APIView):
 class LoginView(APIView):
 
     @extend_schema(
+        tags=["User"],
         request=OpenApiRequest(
             request=OpenApiTypes.OBJECT,
             examples=[OpenApiExample(
@@ -83,6 +85,7 @@ class UserDetailView(APIView):
     permission_classes = IsAuthenticated,
 
     @extend_schema(
+        tags=["User"],
         responses=PopulatedUserSerializer,
     )
     def get(self, request):
@@ -93,6 +96,7 @@ class UserDetailView(APIView):
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     @extend_schema(
+        tags=["User"],
         request=AuthUserSerializer,
         responses={202: PopulatedUserSerializer},
     )
@@ -113,6 +117,9 @@ class UserDetailView(APIView):
         except Exception as e:
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+    @extend_schema(
+        tags=["User"],
+    )
     def delete(self, request):
         user = request.user
         user.is_active = False
