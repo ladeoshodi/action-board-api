@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'tasklists.apps.TasklistConfig',
     'tasks.apps.TasksConfig',
     'drf_spectacular',
+    'drf_spectacular_sidecar',
 ]
 
 MIDDLEWARE = [
@@ -163,6 +164,10 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Task Management Board',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SWAGGER_UI_DIST': 'SIDECAR',
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+
 }
 
 django_on_heroku.settings(locals())

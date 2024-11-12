@@ -13,6 +13,7 @@ django-cors-headers = "*"
 dj-database-url = "*"
 django-on-heroku = "*"
 drf-spectacular = "*"
+drf-spectacular-sidecar = "*"
 
 [dev-packages]
 
