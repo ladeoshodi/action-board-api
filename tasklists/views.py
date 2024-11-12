@@ -9,6 +9,8 @@ from .models import TaskList
 from .serializers.common import TaskListSerializer
 from .serializers.populated import PopulatedTaskListSerializer
 
+from drf_spectacular.utils import extend_schema
+
 
 class TaskListView (APIView):
     permission_classes = IsAuthenticated,
@@ -16,12 +18,21 @@ class TaskListView (APIView):
 
 class TaskListListView(TaskListView):
 
+    @extend_schema(
+        tags=["TaskList"],
+        responses=PopulatedTaskListSerializer,
+    )
     def get(self, request):
         task_lists = TaskList.objects.all().filter(user=request.user.id)
         serialized_task_lists = PopulatedTaskListSerializer(
             task_lists, many=True)
         return Response(serialized_task_lists.data)
 
+    @extend_schema(
+        tags=["TaskList"],
+        request=TaskListSerializer,
+        responses={201: TaskListSerializer}
+    )
     def post(self, request):
         request.data["user"] = request.user.id
         task_list_to_add = TaskListSerializer(data=request.data)
@@ -43,11 +54,20 @@ class TaskListDetailView(TaskListView):
         except TaskList.DoesNotExist:
             raise NotFound(detail="TaskList not found")
 
+    @extend_schema(
+        tags=["TaskList"],
+        responses=PopulatedTaskListSerializer
+    )
     def get(self, request, pk):
         task_list = self.get_task_list(user=request.user.id, pk=pk)
         serialized_task_list = PopulatedTaskListSerializer(task_list)
         return Response(serialized_task_list.data)
 
+    @extend_schema(
+        tags=["TaskList"],
+        request=TaskListSerializer,
+        responses=TaskListSerializer
+    )
     def put(self, request, pk):
         request.data["user"] = request.user.id
         task_list_to_update = self.get_task_list(user=request.user.id, pk=pk)
@@ -62,6 +82,9 @@ class TaskListDetailView(TaskListView):
         except Exception as e:
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+    @extend_schema(
+        tags=["TaskList"]
+    )
     def delete(self, request, pk):
         task_list_to_delete = self.get_task_list(user=request.user.id, pk=pk)
         task_list_to_delete.delete()
