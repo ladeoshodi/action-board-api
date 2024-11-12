@@ -14,6 +14,11 @@ _You can find the [frontend deployment here](https://github.com/ladeoshodi/actio
 
 [Play with the live project here](https://action-board.netlify.app)
 
+## Live Docs
+
+[Swagger UI here](https://action-board.netlify.app/api-docs/swagger-ui/)
+[Redoc here](https://action-board.netlify.app/api-docs/redoc/)
+
 ## Database design
 
 ![Database design](readme-assets/ActionBoard.png)

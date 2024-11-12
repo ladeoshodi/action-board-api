@@ -13,11 +13,23 @@ from .serializers.common import UserSerializer
 from .serializers.populated import PopulatedUserSerializer
 from .serializers.auth import AuthUserSerializer
 
+from drf_spectacular.utils import extend_schema, OpenApiRequest, OpenApiResponse, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
+
 User = get_user_model()
 
 
 class RegisterView(APIView):
-
+    @extend_schema(
+        request=AuthUserSerializer,
+        responses={
+            201: OpenApiResponse(
+                response=OpenApiTypes.STR,
+                examples=[OpenApiExample(
+                    name="Registration Successful",
+                    value={"message": "Registration Successful"})]
+            )}
+    )
     def post(self, request):
         user_to_create = AuthUserSerializer(data=request.data)
 
@@ -29,6 +41,21 @@ class RegisterView(APIView):
 
 class LoginView(APIView):
 
+    @extend_schema(
+        request=OpenApiRequest(
+            request=OpenApiTypes.OBJECT,
+            examples=[OpenApiExample(
+                name="Login Example", value={"email": "email@example.com", "password": "secure_password"}
+            )]),
+        responses={
+            200: OpenApiResponse(
+                response=OpenApiTypes.OBJECT,
+                examples=[OpenApiExample(name="Login Successful", value={
+                    "token": "secure_token",
+                    "message": "Login successful"
+                })]
+            )}
+    )
     def post(self, request):
         email = request.data.get("email")
         password = request.data.get("password")
@@ -55,6 +82,9 @@ class LoginView(APIView):
 class UserDetailView(APIView):
     permission_classes = IsAuthenticated,
 
+    @extend_schema(
+        responses=PopulatedUserSerializer,
+    )
     def get(self, request):
         try:
             serialized_user = PopulatedUserSerializer(request.user)
@@ -62,6 +92,10 @@ class UserDetailView(APIView):
         except Exception as e:
             return Response(e.__dict__ if e.__dict__ else str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
+    @extend_schema(
+        request=AuthUserSerializer,
+        responses={202: PopulatedUserSerializer},
+    )
     def put(self, request):
         if "password" in (request.data.keys()):
             updated_user = AuthUserSerializer(

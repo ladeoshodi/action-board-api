@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'tags.apps.TagsConfig',
     'tasklists.apps.TasklistConfig',
-    'tasks.apps.TasksConfig'
+    'tasks.apps.TasksConfig',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -154,6 +155,25 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'users.authentication.JWTAuthentication'
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Action Board API',
+    'DESCRIPTION': 'Task Management Board',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'APPEND_COMPONENTS': {
+        'securitySchemes': {
+            'Authorization': {
+                'type': 'http',
+                'scheme': 'bearer',
+                'bearerFormat': 'JWT',
+            },
+        }
+    },
+    'SECURITY': [{'Authorization': [], }],
+
 }
 
 django_on_heroku.settings(locals())

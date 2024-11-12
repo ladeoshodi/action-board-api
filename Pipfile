@@ -12,6 +12,7 @@ django-environ = "*"
 django-cors-headers = "*"
 dj-database-url = "*"
 django-on-heroku = "*"
+drf-spectacular = "*"
 
 [dev-packages]
 
