@@ -8,7 +8,7 @@ class TagTest(BaseTest):
 
     def test_get_tags(self):
         """
-        Ensure we can get the tags
+        Ensure we can get tags
         """
         url = "/api/tags/"
         response = self.client.get(
@@ -55,5 +55,4 @@ class TagTest(BaseTest):
             url, HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        with self.assertRaises(Tag.DoesNotExist):
-            Tag.objects.get(name="Updated Test Tag")
+        self.assertEqual(Tag.objects.count(), 0)

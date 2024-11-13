@@ -8,7 +8,7 @@ class TaskListTest(BaseTest):
 
     def test_get_tasklists(self):
         """
-        Ensure we can get the tasklists
+        Ensure we can get tasklists
         """
         url = "/api/tasklists/"
         response = self.client.get(
