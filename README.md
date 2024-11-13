@@ -68,8 +68,14 @@ _You can find the [frontend deployment here](https://github.com/ladeoshodi/actio
    ```
 
 6. Run the development server:
+
    ```sh
    python manage.py runserver
+   ```
+
+7. Run Tests
+   ```sh
+   python manage.py test
    ```
 
 ## Usage
