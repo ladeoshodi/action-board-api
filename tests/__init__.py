@@ -2,6 +2,7 @@ from rest_framework.test import APITestCase, APIClient
 
 from django.contrib.auth import get_user_model
 from tasklists.models import TaskList
+from tags.models import Tag
 
 User = get_user_model()
 
@@ -31,4 +32,9 @@ class BaseTest(APITestCase):
         # create tasklist
         cls.tasklist = TaskList.objects.create(
             name="Test TaskList",
+            user=cls.user)
+
+        # create tag
+        cls.tag = Tag.objects.create(
+            name="Test Tag",
             user=cls.user)

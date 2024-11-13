@@ -22,7 +22,7 @@ class TaskListTest(BaseTest):
         """
         Ensure we can get a single tasklist
         """
-        url = "/api/tasklists/1/"
+        url = f"/api/tasklists/{self.tasklist.id}/"
         response = self.client.get(
             url, HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
@@ -50,7 +50,7 @@ class TaskListTest(BaseTest):
         """
         Ensure we can update a tasklist
         """
-        url = "/api/tasklists/1/"
+        url = f"/api/tasklists/{self.tasklist.id}/"
         data = {
             "name": "Updated Test TaskList"
         }
@@ -66,7 +66,7 @@ class TaskListTest(BaseTest):
         """
         Ensure we can delete a tasklist
         """
-        url = "/api/tasklists/1/"
+        url = f"/api/tasklists/{self.tasklist.id}/"
         response = self.client.delete(
             url, HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
