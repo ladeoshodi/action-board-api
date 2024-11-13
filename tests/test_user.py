@@ -24,6 +24,7 @@ class UserTest(BaseTest):
         }
 
         response = self.client.post(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.get(
             email="testuser1@example.com").username, 'testuser1')
@@ -40,6 +41,7 @@ class UserTest(BaseTest):
         }
 
         response = self.client.post(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("token", response.data)
 
@@ -53,6 +55,7 @@ class UserTest(BaseTest):
             "email": ""
         }
         response = self.client.post(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_current_user(self):
@@ -61,9 +64,9 @@ class UserTest(BaseTest):
         """
 
         url = "/api/user/"
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
+        response = self.client.get(
+            url, HTTP_AUTHORIZATION=f"Bearer {self.token}")
 
-        response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("email"), "testuser@example.com")
 
@@ -76,9 +79,10 @@ class UserTest(BaseTest):
         data = {
             "email": "newemail@example.com"
         }
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
 
-        response = self.client.put(url, data, format='json')
+        response = self.client.put(
+            url, data, format='json', HTTP_AUTHORIZATION=f"Bearer {self.token}")
+
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(User.objects.get(
             username="testuser").email, "newemail@example.com")
@@ -89,8 +93,11 @@ class UserTest(BaseTest):
         """
 
         url = "/api/user/"
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.token)
 
-        response = self.client.delete(url)
+        response = self.client.delete(
+            url, HTTP_AUTHORIZATION=f"Bearer {self.token}")
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
         self.assertFalse(User.objects.get(
             email="testuser@example.com").is_active, False)

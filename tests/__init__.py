@@ -27,3 +27,8 @@ class BaseTest(APITestCase):
         }
         response = client.post(url, data, format='json')
         cls.token = response.data['token']
+
+        # create tasklist
+        cls.tasklist = TaskList.objects.create(
+            name="Test TaskList",
+            user=cls.user)
